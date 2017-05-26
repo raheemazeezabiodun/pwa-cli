@@ -2,7 +2,7 @@
 'use strict';
 
 const program = require('commander');
-const commands = require('./src/commands');
+const commands = require('./dist/commands');
 
 
 program

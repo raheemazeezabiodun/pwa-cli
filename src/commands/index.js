@@ -15,7 +15,7 @@ export function serviceWorker() {
     // fetch page with service worker
     readFile('./src/serviceWorker/register.js')
         .then(function (data) {
-            const sw = `<script>\n ${data} </script>`;
+            const sw = `<script>\n ${data} </script>\n`;
 
             // read the html index page and add sw to it
             readFile('./index.html')
@@ -45,7 +45,26 @@ export function pushNotification() {
 }
 
 export function homeScreen() {
-
+    readFile('./src/serviceWorker/manifest.json')
+        .then((data) => {
+        const hs = `<meta name="viewport" content="width=device-width, user-scalable=no" />
+                <link rel="manifest" href="manifest.json" />`
+            readFile('./index.html')
+                .then((html) => {
+                    const result = html.replace(/\<\/head>/g, hs + '</head>');
+                    writeFile('./index.html', result)
+                        .then((data) => {
+                            logSuccess("2-Home Screen Added successfully");
+                        })
+                        .catch((error) => {
+                            logError(`2- error cannot write to index.html, returned error ${error}`);
+                        })
+                }).catch((error) => {
+                logError(`2- error cannot read index.html, returned error: ${error}`);
+            })
+        }).catch((error) => {
+            logError(error)
+        })
 }
 
 export function migrate() {
